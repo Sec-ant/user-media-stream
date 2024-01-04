@@ -1,0 +1,67 @@
+{
+  "name": "user-media-stream",
+  "description": "User media stream lib",
+  "private": false,
+  "version": "0.1.0-alpha.2",
+  "type": "module",
+  "files": [
+    "./dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./media-track-shims": {
+      "types": "./dist/media-track-shims.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sec-ant/user-media-stream.git"
+  },
+  "homepage": "https://github.com/Sec-ant/user-media-stream",
+  "bugs": {
+    "url": "https://github.com/Sec-ant/user-media-stream/issues",
+    "email": "zezhengwu@proton.me"
+  },
+  "keywords": [
+    "user-media-stream"
+  ],
+  "author": {
+    "name": "Ze-Zheng Wu"
+  },
+  "license": "MIT",
+  "config": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint . --ext .ts",
+    "type-check": "tsc --noEmit --emitDeclarationOnly false",
+    "format": "prettier . --write",
+    "prebuild": "npm run lint && npm run type-check && npm run format",
+    "build": "vite build",
+    "postbuild": "tsc",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build",
+    "ncu": "npx npm-check-updates --filterVersion \"/^[~^]/\" -u",
+    "postncu": "npm i"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "eslint": "^8.56.0",
+    "npm-check-updates": "^16.14.12",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vite-plugin-static-copy": "^1.0.0"
+  },
+  "dependencies": {
+    "webrtc-adapter": "^8.2.3"
+  }
+}
