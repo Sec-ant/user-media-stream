@@ -18,13 +18,13 @@ export default defineConfig({
             return "shim-utils";
           }
           if (/webrtc-adapter\/dist\/chrome/.test(id)) {
-            return "chrome-shim";
+            return "shim-chrome";
           }
           if (/webrtc-adapter\/dist\/firefox/.test(id)) {
-            return "firefox-shim";
+            return "shim-firefox";
           }
           if (/webrtc-adapter\/dist\/safari/.test(id)) {
-            return "safari-shim";
+            return "shim-safari";
           }
         },
       },

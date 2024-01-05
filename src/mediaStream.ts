@@ -2,21 +2,21 @@ import { createQueuefy } from "./queuefy.js";
 import { shimGetUserMedia } from "./shimGetUserMedia.js";
 
 const GET_CAPABILITIES_TIMEOUT = 500;
-const IOS_PWA_WAIT_TIMEOUT = 3000;
+const VIDEO_LOADED_DATA_TIMEOUT = 3000;
 
-type InitConstraints =
+export type InitConstraints =
   | MediaStreamConstraints
   | ((
       supportedConstraints: MediaTrackSupportedConstraints,
     ) => MediaStreamConstraints | Promise<MediaStreamConstraints>);
 
-type VideoConstraints =
+export type VideoConstraints =
   | MediaTrackConstraints
   | ((
       capabilities: MediaTrackCapabilities,
     ) => MediaTrackConstraints | Promise<MediaTrackConstraints>);
 
-type AudioConstraints =
+export type AudioConstraints =
   | MediaTrackConstraints
   | ((
       capabilities: MediaTrackCapabilities,
@@ -29,6 +29,14 @@ export interface VAConstraints {
 
 export interface Constraints extends VAConstraints {
   initConstraints?: InitConstraints;
+}
+
+export interface ConstrainMetaOptions {
+  getCapabilitiesTimeout?: number;
+}
+
+export interface InitMetaOptions extends ConstrainMetaOptions {
+  videoLoadedDataTimeout?: number;
 }
 
 const defaultInitConstraints: InitConstraints = {
@@ -50,6 +58,15 @@ const defaultConstraints: Required<Constraints> = {
   initConstraints: defaultInitConstraints,
 };
 
+const defaultConstrainMetaOptions: Required<ConstrainMetaOptions> = {
+  getCapabilitiesTimeout: GET_CAPABILITIES_TIMEOUT,
+};
+
+const defaultInitMetaOptions: Required<InitMetaOptions> = {
+  ...defaultConstrainMetaOptions,
+  videoLoadedDataTimeout: VIDEO_LOADED_DATA_TIMEOUT,
+};
+
 async function initMediaStream(
   videoElement: HTMLVideoElement,
   {
@@ -57,11 +74,15 @@ async function initMediaStream(
     videoConstraints = defaultConstraints.videoConstraints,
     audioConstraints = defaultConstraints.audioConstraints,
   }: Constraints = defaultConstraints,
+  {
+    getCapabilitiesTimeout = defaultInitMetaOptions.getCapabilitiesTimeout,
+    videoLoadedDataTimeout = defaultInitMetaOptions.videoLoadedDataTimeout,
+  }: InitMetaOptions = defaultInitMetaOptions,
 ) {
   // check if we are in the secure context
   if (window.isSecureContext !== true) {
     throw new DOMException(
-      "Cannot use navigator.mediaDevices in insecure contexts. Use HTTPS or localhost.",
+      "Cannot use navigator.mediaDevices in insecure contexts. Please use HTTPS or localhost.",
       "NotAllowedError",
     );
   }
@@ -75,7 +96,7 @@ async function initMediaStream(
   }
 
   // shim WebRTC APIs in the client runtime
-  shimGetUserMedia();
+  await shimGetUserMedia();
 
   // callback constraints
   if (typeof initConstraints === "function") {
@@ -116,14 +137,20 @@ async function initMediaStream(
             "InvalidStateError",
           ),
         );
-      }, IOS_PWA_WAIT_TIMEOUT);
+      }, videoLoadedDataTimeout);
     }),
   ]);
 
-  await constrainMediaStream(stream, {
-    videoConstraints,
-    audioConstraints,
-  });
+  await constrainMediaStream(
+    stream,
+    {
+      videoConstraints,
+      audioConstraints,
+    },
+    {
+      getCapabilitiesTimeout,
+    },
+  );
 
   return stream;
 }
@@ -158,6 +185,9 @@ async function constrainMediaStream(
     videoConstraints = defaultVAConstraints.videoConstraints,
     audioConstraints = defaultVAConstraints.audioConstraints,
   }: VAConstraints = defaultVAConstraints,
+  {
+    getCapabilitiesTimeout = defaultConstrainMetaOptions.getCapabilitiesTimeout,
+  }: ConstrainMetaOptions = defaultConstrainMetaOptions,
 ) {
   // get video tracks
   const videoTracks = stream.getVideoTracks();
@@ -172,7 +202,7 @@ async function constrainMediaStream(
       videoTracks.map(async (videoTrack) => {
         if (typeof videoConstraints === "function") {
           videoConstraints = await videoConstraints(
-            await getCapabilities(videoTrack),
+            await getCapabilities(videoTrack, getCapabilitiesTimeout),
           );
         }
         await videoTrack.applyConstraints(videoConstraints);
@@ -183,7 +213,7 @@ async function constrainMediaStream(
       audioTracks.map(async (audioTrack) => {
         if (typeof audioConstraints === "function") {
           audioConstraints = await audioConstraints(
-            await getCapabilities(audioTrack),
+            await getCapabilities(audioTrack, getCapabilitiesTimeout),
           );
         }
         await audioTrack.applyConstraints(audioConstraints);
@@ -216,7 +246,7 @@ function attachMediaStream(
 
 async function getCapabilities(
   track: MediaStreamTrack,
-  timeout = GET_CAPABILITIES_TIMEOUT,
+  timeout: number,
 ): Promise<MediaTrackCapabilities> {
   return new Promise((resolve) => {
     // timeout, return empty capabilities

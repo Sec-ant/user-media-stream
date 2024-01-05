@@ -24,7 +24,11 @@ export const shimGetUserMedia = (() => {
         ).shimGetUserMedia(window);
         break;
       default:
-        throw new DOMException("Browser not supported.", "NotSupportedError");
+        /**
+         * Do not throw if we cannot detect the browser details,
+         * in case there're some other spec-compliant browsers or runtimes
+         */
+        break;
     }
     called = true;
   };
