@@ -12,19 +12,19 @@ npm i user-media-stream
 
 - Media stream operations:
 
-```ts
-import {
-  initMediaStream,
-  stopMediaStream,
-  constrainMediaStream,
-} from "user-media-stream";
-```
+  ```ts
+  import {
+    initMediaStream,
+    stopMediaStream,
+    constrainMediaStream,
+  } from "user-media-stream";
+  ```
 
 - Media constraints & capablities shim:
 
-```ts
-/// <reference types="user-media-stream/media-track-shims" />
-```
+  ```ts
+  /// <reference types="user-media-stream/media-track-shims" />
+  ```
 
 ## API
 
@@ -33,6 +33,10 @@ import {
 - `constrainMediaStream`: Apply video and audio constraints to a given media stream.
 
 For more details, refer to the [source code](./src/mediaStream.ts).
+
+## Acknowledgement
+
+This package is largely inspired by the code in [`camera.ts`](https://github.com/gruhn/vue-qrcode-reader/blob/9278e21c40de79c69302650acf3659109f564681/src/misc/camera.ts) from [`gruhn/vue-qrcode-reader`](https://github.com/gruhn/vue-qrcode-reader). :heart:
 
 ## License
 
