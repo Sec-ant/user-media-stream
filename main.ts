@@ -41,7 +41,7 @@ if (videoElement) {
     audioTracks.map((audioTrack) => audioTrack.getSettings()),
   );
 
-  for (let i = 0; i < 10; ++i) {
+  for (let i = 0; i < 20; ++i) {
     await new Promise<void>((resolve) => {
       setTimeout(() => {
         resolve();
