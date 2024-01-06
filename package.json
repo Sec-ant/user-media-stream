@@ -2,7 +2,7 @@
   "name": "user-media-stream",
   "description": "A streamlined JavaScript library designed for web applications to easily handle camera streams.",
   "private": false,
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-beta.4",
   "type": "module",
   "files": [
     "./dist"
@@ -62,7 +62,7 @@
     "prettier": "^3.1.1",
     "prettier-plugin-jsdoc": "^1.3.0",
     "typescript": "^5.3.3",
-    "vite": "^5.0.10",
+    "vite": "^5.0.11",
     "vite-plugin-static-copy": "^1.0.0"
   },
   "dependencies": {
