@@ -1,7 +1,7 @@
 import { detectBrowser } from "webrtc-adapter/dist/utils";
 
 /**
- * Provides a shim for getUserMedia API across different browsers.
+ * Provide a shim for getUserMedia API across different browsers.
  *
  * This function ensures compatibility of the getUserMedia API with various browsers by applying
  * necessary shims provided by the 'webrtc-adapter' package. It detects the browser and applies the

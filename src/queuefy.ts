@@ -18,7 +18,7 @@ const defaultCreateQueuefyOptions: Required<CreateQueuefyOptions> = {
 };
 
 /**
- * Creates a function that ensures sequential execution of asynchronous tasks.
+ * Create a function that ensures sequential execution of asynchronous tasks.
  *
  * This function takes an option object and returns a new function. The returned function, when
  * called with an asynchronous function, returns a wrapped version of that function. The wrapped

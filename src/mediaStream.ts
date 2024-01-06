@@ -75,7 +75,7 @@ export type AudioConstraints =
 /**
  * Video and audio constraints.
  *
- * Contains optional `videoConstraints` and `audioConstraints`. This is used as an argument of
+ * Contains optional `videoConstraints` and `audioConstraints`. This is used as an argument of the
  * function `constrainMediaStream`.
  */
 export interface VAConstraints {
@@ -87,7 +87,7 @@ export interface VAConstraints {
  * Full constraints.
  *
  * Contains optional `initConstraints`, `videoConstraints` and `audioConstraints`. This is used as
- * an argument of function `initMediaStream`.
+ * an argument of the function `initMediaStream`.
  */
 export interface Constraints extends VAConstraints {
   initConstraints?: InitConstraints;
@@ -123,7 +123,7 @@ export interface InitMetaOptions extends ConstrainMetaOptions {
  */
 const defaultInitConstraints: InitConstraints = {
   video: true,
-  audio: true,
+  audio: false,
 };
 
 /**
@@ -179,7 +179,7 @@ const defaultInitMetaOptions: Required<InitMetaOptions> = {
 };
 
 /**
- * Initializes a media stream with specified constraints and attaches it to the given video element.
+ * Initialize a media stream with specified constraints and attach it to the given video element.
  *
  * This function does some checks mainly for compatibility and handles necessary events for reliable
  * operation.
@@ -281,7 +281,7 @@ async function initMediaStream(
 }
 
 /**
- * Stops a given media stream and detaches it from a video element.
+ * Stop a given media stream and detach it from a video element.
  *
  * This function clears the source of the provided video element and stops all tracks of the given
  * media stream. It ensures that the video element is reset and the media stream is properly
@@ -316,7 +316,7 @@ async function stopMediaStream(
 }
 
 /**
- * Applies video and audio constraints to a given media stream.
+ * Apply video and audio constraints to a given media stream.
  *
  * This function processes both video and audio tracks of the media stream, applying the specified
  * constraints to each kind of tracks.
@@ -370,7 +370,7 @@ async function constrainMediaStream(
 }
 
 /**
- * Attaches a given media stream to a HTMLVideoElement.
+ * Attach a given media stream to a HTMLVideoElement.
  *
  * This function sets the source of the video element to the provided media stream. It supports
  * different ways of attaching the stream based on browser compatibility.
@@ -401,7 +401,7 @@ function attachMediaStream(
 }
 
 /**
- * Asynchronously retrieves the capabilities of a given media stream track.
+ * Asynchronously retrieve the capabilities of a given media stream track.
  *
  * This function attempts to fetch the capabilities of a MediaStreamTrack. If called too early, it
  * may return an empty object as [the capabilities might not be available
