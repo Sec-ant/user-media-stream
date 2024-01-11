@@ -7,10 +7,13 @@
   "files": [
     "./dist"
   ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/es/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": "./dist/es/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/es/index.js"
     },
     "./media-track-shims": {
       "types": "./dist/media-track-shims.d.ts"
@@ -44,9 +47,14 @@
     "lint": "eslint . --ext .ts",
     "type-check": "tsc --noEmit --emitDeclarationOnly false",
     "format": "prettier . --write",
-    "prebuild": "npm run lint && npm run type-check && npm run format",
-    "build": "vite build",
-    "postbuild": "tsc",
+    "clear:dist": "rimraf dist",
+    "prebuild": "npm run lint && npm run type-check && npm run format && npm run clear:dist",
+    "build:es": "vite build",
+    "build:cjs": "tsx ./scripts/build-cjs.ts",
+    "build:iife": "tsx ./scripts/build-iife.ts",
+    "build": "conc \"npm:build:es\" \"npm:build:cjs\" \"npm:build:iife\"",
+    "postbuild:es": "tsc --declarationDir ./dist/es",
+    "postbuild:cjs": "tsc --declarationDir ./dist/cjs",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
     "ncu": "npx npm-check-updates --filterVersion \"/^[~^]/\" -u",
@@ -57,10 +65,13 @@
     "@commitlint/config-conventional": "^18.4.4",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
+    "concurrently": "^8.2.2",
     "eslint": "^8.56.0",
     "npm-check-updates": "^16.14.12",
     "prettier": "^3.1.1",
     "prettier-plugin-jsdoc": "^1.3.0",
+    "rimraf": "^5.0.5",
+    "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.11",
     "vite-plugin-static-copy": "^1.0.0"
