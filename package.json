@@ -2,7 +2,7 @@
   "name": "user-media-stream",
   "description": "A streamlined JavaScript library designed for web applications to easily handle camera streams.",
   "private": false,
-  "version": "0.1.0-beta.4",
+  "version": "0.1.0-beta.5",
   "type": "module",
   "files": [
     "./dist"
