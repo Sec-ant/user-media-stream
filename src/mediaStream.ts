@@ -1,4 +1,3 @@
-import { createQueuefy } from "./queuefy.js";
 import { shimGetUserMedia } from "./shimGetUserMedia.js";
 
 /**
@@ -446,36 +445,4 @@ async function getCapabilities(
   });
 }
 
-/**
- * Initialize the queuefy function and creat a queue to manage the sequential execution of media
- * stream operations.
- */
-const queuefy = createQueuefy();
-
-/**
- * Create a queued version of the `initMediaStream` function to avoid conflicts or race conditions
- * of media stream operations.
- */
-const _initMediaStream = queuefy(initMediaStream);
-
-/**
- * Create a queued version of the `stopMediaStream` function to avoid conflicts or race conditions
- * of media stream operations.
- */
-const _stopMediaStream = queuefy(stopMediaStream);
-
-/**
- * Create a queued version of the `constrainMediaStream` function to avoid conflicts or race
- * conditions of media stream operations.
- */
-const _constrainMediaStream = queuefy(constrainMediaStream);
-
-/**
- * Export the queued versions of the functions for external use, providing more predictable and
- * manageable behaviors.
- */
-export {
-  _initMediaStream as initMediaStream,
-  _stopMediaStream as stopMediaStream,
-  _constrainMediaStream as constrainMediaStream,
-};
+export { initMediaStream, stopMediaStream, constrainMediaStream };
