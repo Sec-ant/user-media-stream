@@ -8,9 +8,9 @@ export default defineConfig({
         index: "./src/index.ts",
       },
       formats: ["es"],
-      fileName: (format, entryName) =>
-        format === "es" ? `${entryName}.js` : `${entryName}.${format}.js`,
+      fileName: (_, entryName) => `${entryName}.js`,
     },
+    outDir: "dist/es",
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -27,6 +27,7 @@ export default defineConfig({
             return "shim-safari";
           }
         },
+        chunkFileNames: "[name]-[hash].js",
       },
     },
   },
