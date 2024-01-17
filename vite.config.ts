@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import { viteStaticCopy } from "vite-plugin-static-copy";
+import copy from "rollup-plugin-copy";
 
 export default defineConfig({
   build: {
@@ -32,13 +32,14 @@ export default defineConfig({
     },
   },
   plugins: [
-    viteStaticCopy({
+    copy({
       targets: [
         {
           src: "./src/media-track-shims.d.ts",
-          dest: ".",
+          dest: "./dist",
         },
       ],
+      copyOnce: true,
     }),
   ],
 });
