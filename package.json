@@ -2,9 +2,11 @@
   "name": "user-media-stream",
   "description": "A streamlined JavaScript library designed for web applications to easily handle camera streams.",
   "private": false,
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0",
   "type": "module",
-  "files": ["./dist"],
+  "files": [
+    "./dist"
+  ],
   "main": "./dist/cjs/index.js",
   "module": "./dist/es/index.js",
   "exports": {
@@ -26,7 +28,12 @@
     "url": "https://github.com/Sec-ant/user-media-stream/issues",
     "email": "zezhengwu@proton.me"
   },
-  "keywords": ["user-media", "media-stream", "camera", "webcam"],
+  "keywords": [
+    "user-media",
+    "media-stream",
+    "camera",
+    "webcam"
+  ],
   "author": {
     "name": "Ze-Zheng Wu"
   },
