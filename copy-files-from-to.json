@@ -1,0 +1,11 @@
+{
+  "copyFiles": [
+    {
+      "from": "./src/media-track-shims.d.ts",
+      "to": "./dist/"
+    }
+  ],
+  "copyFilesSettings": {
+    "whenFileExists": "overwrite"
+  }
+}

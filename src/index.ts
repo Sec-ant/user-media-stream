@@ -1,1 +1,1 @@
-export * from "./mediaStream.js";
+export * from "./core.js";

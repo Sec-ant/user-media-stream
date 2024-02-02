@@ -13,11 +13,7 @@ npm i user-media-stream
 - Media stream operations:
 
   ```ts
-  import {
-    initMediaStream,
-    stopMediaStream,
-    constrainMediaStream,
-  } from "user-media-stream";
+  import { createUserMediaStream } from "user-media-stream";
   ```
 
 - Media constraints & capablities shim:
@@ -25,14 +21,6 @@ npm i user-media-stream
   ```ts
   /// <reference types="user-media-stream/media-track-shims" />
   ```
-
-## API
-
-- `initMediaStream`: Initialize a media stream and attach it to a given video element.
-- `stopMediaStream`: Stop a given media stream and detach it from a video element.
-- `constrainMediaStream`: Apply video and audio constraints to a given media stream.
-
-For more details, refer to the [source code](./src/mediaStream.ts).
 
 ## Acknowledgement
 
