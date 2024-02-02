@@ -4,9 +4,7 @@
   "private": false,
   "version": "0.1.0-rc.1",
   "type": "module",
-  "files": [
-    "./dist"
-  ],
+  "files": ["./dist"],
   "main": "./dist/cjs/index.js",
   "module": "./dist/es/index.js",
   "exports": {
@@ -28,12 +26,7 @@
     "url": "https://github.com/Sec-ant/user-media-stream/issues",
     "email": "zezhengwu@proton.me"
   },
-  "keywords": [
-    "user-media",
-    "media-stream",
-    "camera",
-    "webcam"
-  ],
+  "keywords": ["user-media", "media-stream", "camera", "webcam"],
   "author": {
     "name": "Ze-Zheng Wu"
   },
@@ -43,40 +36,56 @@
     "access": "public"
   },
   "scripts": {
+    "update-hooks": "simple-git-hooks",
+    "changeset": "changeset",
+    "bump": "changeset version 2>/dev/null | grep . && npm i; exit 0",
+    "copy": "copy-files-from-to",
     "dev": "vite",
-    "lint": "eslint . --ext .ts",
+    "lint": "biome lint .",
     "type-check": "tsc --noEmit --emitDeclarationOnly false",
-    "format": "prettier . --write",
+    "format:prettier": "prettier . --write",
+    "format:biome": "biome format . --write",
+    "format": "conc \"npm:format:prettier\" \"npm:format:biome\"",
+    "check:biome": "biome check --apply .",
+    "check": "conc \"npm:format:prettier\" \"npm:check:biome\"",
     "clear:dist": "rimraf dist",
-    "prebuild": "npm run lint && npm run type-check && npm run format && npm run clear:dist",
+    "prebuild": "npm run check && npm run type-check && npm run clear:dist",
     "build:es": "vite build",
     "build:cjs": "tsx ./scripts/build-cjs.ts",
     "build:iife": "tsx ./scripts/build-iife.ts",
     "build": "conc \"npm:build:es\" \"npm:build:cjs\" \"npm:build:iife\"",
     "postbuild:es": "tsc --declarationDir ./dist/es",
     "postbuild:cjs": "tsc --declarationDir ./dist/cjs",
+    "postbuild": "conc \"npm:copy\"",
+    "prebuild:ci": "npm run format:prettier && npm run type-check && npm run clear:dist",
+    "build:ci": "conc \"npm:build:es\" \"npm:build:cjs\" \"npm:build:iife\"",
+    "postbuild:ci": "npm run postbuild",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
-    "ncu": "npx npm-check-updates --filterVersion \"/^[~^]/\" -u",
-    "postncu": "npm i"
+    "ncu": "ncu",
+    "postncu": "npm i",
+    "bump-biome": "npm i @biomejs/biome@latest --save-exact"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.4.4",
-    "@commitlint/config-conventional": "^18.4.4",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
+    "@biomejs/biome": "^1.5.3",
+    "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^18.6.0",
+    "@commitlint/config-conventional": "^18.6.0",
     "concurrently": "^8.2.2",
-    "eslint": "^8.56.0",
-    "npm-check-updates": "^16.14.12",
+    "copy-files-from-to": "^3.9.1",
+    "lint-staged": "^15.2.1",
+    "npm-check-updates": "^16.14.14",
     "prettier": "^3.2.4",
     "prettier-plugin-jsdoc": "^1.3.0",
     "rimraf": "^5.0.5",
-    "rollup-plugin-copy": "^3.5.0",
+    "simple-git-hooks": "^2.9.0",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
-    "vite": "^5.0.11"
+    "vite": "^5.0.12"
   },
   "dependencies": {
-    "webrtc-adapter": "^8.2.3"
+    "just-compare": "^2.3.0",
+    "webrtc-adapter": "^8.2.3",
+    "zustand": "^4.5.0"
   }
 }

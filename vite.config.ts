@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import copy from "rollup-plugin-copy";
+import { dependencies } from "./package.json";
 
 export default defineConfig({
   build: {
@@ -12,6 +12,11 @@ export default defineConfig({
     },
     outDir: "dist/es",
     rollupOptions: {
+      external: [
+        ...Object.keys(dependencies).map(
+          (dep) => new RegExp(`^${escapeRegExp(dep)}(\/|$)`),
+        ),
+      ],
       output: {
         manualChunks: (id) => {
           if (/webrtc-adapter\/dist\/utils/.test(id)) {
@@ -31,15 +36,8 @@ export default defineConfig({
       },
     },
   },
-  plugins: [
-    copy({
-      targets: [
-        {
-          src: "./src/media-track-shims.d.ts",
-          dest: "./dist",
-        },
-      ],
-      copyOnce: true,
-    }),
-  ],
 });
+
+function escapeRegExp(text: string) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}

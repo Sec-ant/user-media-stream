@@ -1,67 +1,45 @@
 /// <reference types="./src/media-track-shims.d.ts" />
-import {
-  initMediaStream,
-  constrainMediaStream,
-  stopMediaStream,
-} from "./src/index";
 
-const videoElement = document.querySelector("video");
+import { attachMediaStream, createUserMediaStream } from "./src/index.js";
 
-if (videoElement) {
-  const stream = await initMediaStream(videoElement, {
-    initConstraints(supportedConstraints) {
-      console.log("supported constraints", supportedConstraints);
-      return {
-        audio: true,
-        video: true,
-      };
-    },
-    videoConstraints(capabilities) {
-      console.log("video capabilities", capabilities);
-      return {};
-    },
-    audioConstraints(capabilities) {
-      console.log("audio capabilities", capabilities);
-      return {};
-    },
-  });
-
-  const videoTracks = stream.getVideoTracks();
-  const audioTracks = stream.getAudioTracks();
-
-  console.log("video track", videoTracks);
-  console.log("audio track", audioTracks);
-
-  console.log(
-    "video track settings",
-    videoTracks.map((videoTrack) => videoTrack.getSettings()),
-  );
-  console.log(
-    "audio track settings",
-    audioTracks.map((audioTrack) => audioTrack.getSettings()),
-  );
-
-  for (let i = 0; i < 20; ++i) {
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
-
-    await constrainMediaStream(stream, {
-      videoConstraints: {
-        advanced: [
-          { exposureMode: "manual", exposureTime: i % 2 === 0 ? 100 : 1000 },
-        ],
+const userMediaStream = createUserMediaStream({
+  initConstraints(supportedConstraints) {
+    console.log("supported constraints", supportedConstraints);
+    return {
+      audio: false,
+      video: {
+        aspectRatio: 1,
       },
-    });
-  }
+    };
+  },
+  videoConstraints(capabilities) {
+    console.log("video capabilities", capabilities);
+    return {
+      advanced: [
+        {
+          exposureMode: "manual",
+          exposureTime: 800,
+        },
+      ],
+    };
+  },
+  audioConstraints(capabilities) {
+    console.log("audio capabilities", capabilities);
+    return {};
+  },
+  onStreamStart: () => console.log("stream start"),
+  onStreamStop: () => console.log("stream stop"),
+  onStreamUpdate: () => console.log("stream update"),
+});
 
-  await new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 1000);
-  });
+const stream = await userMediaStream.start();
 
-  await stopMediaStream(videoElement, stream);
-}
+const capabilities = await userMediaStream.inspect();
+
+console.log(capabilities);
+
+const videoElement = document.querySelector("video")!;
+
+attachMediaStream(videoElement, stream);
+
+// videoElement.play();
