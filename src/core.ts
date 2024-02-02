@@ -134,17 +134,25 @@ export interface UserMediaStreamOptions {
    *
    * @param stream - Media stream
    */
-  onStreamStart?: ((stream: MediaStream) => unknown) | undefined;
+  onStreamStart?: (stream: MediaStream) => unknown;
   /**
    * Callback function that is triggered when the stream stops.
    */
-  onStreamStop?: (() => unknown) | undefined;
+  onStreamStop?: () => unknown;
   /**
    * Callback function that is triggered on each application of constraints.
    *
    * @param stream - Media stream
    */
-  onStreamUpdate?: ((stream: MediaStream) => unknown) | undefined;
+  onStreamUpdate?: (stream: MediaStream) => unknown;
+  /**
+   * Callback function that is triggered when the stream is inspected.
+   *
+   * @param streamCapablities - User media stream capabilities
+   */
+  onStreamInspect?: (
+    streamCapablities?: UserMediaStreamCapabilities,
+  ) => unknown;
 }
 
 export interface UserMediaStreamCapabilities {
@@ -197,6 +205,10 @@ function resolveUserMediaStreamOptions(
       "onStreamUpdate" in userMediaStreamOptions
         ? userMediaStreamOptions.onStreamUpdate
         : undefined,
+    onStreamInspect:
+      "onStreamInspect" in userMediaStreamOptions
+        ? userMediaStreamOptions.onStreamInspect
+        : undefined,
   };
 }
 
@@ -220,6 +232,7 @@ export function createUserMediaStream(
     onStreamStart,
     onStreamStop,
     onStreamUpdate,
+    onStreamInspect,
   } = resolveUserMediaStreamOptions(userMediaStreamOptions);
 
   // initialize a queue
@@ -443,6 +456,7 @@ export function createUserMediaStream(
       onStreamStart,
       onStreamStop,
       onStreamUpdate,
+      onStreamInspect,
     })),
   );
 
@@ -483,10 +497,14 @@ export function createUserMediaStream(
   };
 
   // the exposed inspect function to inspect a stream
-
   const inspect = async () => {
-    const { getCapabilitiesTimeout } = userMediaStreamStore.getState();
-    return await queuefiedInspect({ getCapabilitiesTimeout });
+    const { getCapabilitiesTimeout, onStreamInspect } =
+      userMediaStreamStore.getState();
+    const streamCapablities = await queuefiedInspect({
+      getCapabilitiesTimeout,
+    });
+    onStreamInspect?.(streamCapablities ? { ...streamCapablities } : undefined);
+    return streamCapablities;
   };
 
   // the exposed control function to stop a stream
